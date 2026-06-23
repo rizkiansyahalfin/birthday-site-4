@@ -17,7 +17,7 @@ export function useReveal() {
           observer.unobserve(entry.target)
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.05 }
     )
     observer.observe(target.value)
   })

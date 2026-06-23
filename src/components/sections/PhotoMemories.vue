@@ -85,7 +85,6 @@ const tilts = ['-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2']
                 :src="photo.src"
                 :alt="photo.caption"
                 class="w-full h-full object-cover"
-                loading="lazy"
                 @error="onImgError(photo.src)"
               />
               <div v-else class="w-full h-full flex items-center justify-center text-4xl text-wine-700/40">
@@ -126,11 +125,14 @@ const tilts = ['-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2']
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .card-inner.is-flipped {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
 }
 
 .card-front, .card-back {
@@ -138,10 +140,18 @@ const tilts = ['-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2']
   height: 100%;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
+
+.card-front {
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
 }
 
 .card-back {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
   /* A nice subtle paper texture overlay for a cozy letter feel */
   background-image: radial-gradient(rgba(110, 48, 73, 0.04) 1px, transparent 1px);
   background-size: 8px 8px;
