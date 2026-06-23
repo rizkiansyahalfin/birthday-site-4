@@ -9,9 +9,24 @@ const currentTime = ref(0)
 const duration = ref(0)
 const isWaiting = ref(false) // tracks if the track is loading/buffering
 
+let isFirstPlay = true
+
 // Set initial track
 if (playlist.tracks && playlist.tracks.length > 0) {
   audio.src = playlist.tracks[currentIndex.value].src
+  const setInitialTime = () => {
+    if (currentIndex.value === 0 && isFirstPlay) {
+      try {
+        audio.currentTime = 40
+      } catch (e) {}
+    }
+  }
+  audio.addEventListener('loadedmetadata', setInitialTime, { once: true })
+  try {
+    if (currentIndex.value === 0 && isFirstPlay) {
+      audio.currentTime = 40
+    }
+  } catch (e) {}
 }
 
 // Audio Event Listeners
@@ -57,7 +72,23 @@ function selectTrack(i) {
   currentIndex.value = i
   isWaiting.value = true
   audio.src = playlist.tracks[i].src
-  audio.currentTime = 0
+  
+  const startTime = (i === 0 && isFirstPlay) ? 40 : 0
+  if (i === 0) {
+    isFirstPlay = false
+  }
+  
+  const setTime = () => {
+    try {
+      audio.currentTime = startTime
+    } catch (e) {}
+  }
+  audio.addEventListener('loadedmetadata', setTime, { once: true })
+  
+  try {
+    audio.currentTime = startTime
+  } catch (e) {}
+
   audio.play()
     .then(() => {
       isPlaying.value = true
